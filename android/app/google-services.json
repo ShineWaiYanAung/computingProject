@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "153885731876",
+    "project_id": "my-web-base-bizproject",
+    "storage_bucket": "my-web-base-bizproject.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:153885731876:android:a55c58f60e49313bd6bcb1",
+        "android_client_info": {
+          "package_name": "com.example.a_web_based_managing_and_report_portal"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBCHL6VH-IFrkzKmSj5x6g78xolmdyIPw4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,21 @@
+import 'package:flutter/material.dart';
+import '../../bloc/sales_service.dart';
+import 'package:provider/provider.dart';
+
+import '../../widgets/revuencard.dart';
+
+class ChartScreen extends StatefulWidget {
+  const ChartScreen({super.key});
+
+  @override
+  State<ChartScreen> createState() => _ChartScreenState();
+}
+
+class _ChartScreenState extends State<ChartScreen> {
+
+
+  @override
+  Widget build(BuildContext context) {
+    return RevenueCard();
+  }
+}
