@@ -1,5 +1,5 @@
 import '../../domain/entities/sales/salesentity.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 class SaleItemModel {
   final String productId;
   final String name;
@@ -71,11 +71,10 @@ class SaleModel {
   final String businessId;
 
   final List<SaleItemModel> items;
-
   final double subtotal;
 
-  final String createdAt;   // full datetime
-  final String createdBy;   // who sold
+  final DateTime createdAt;   // ✅ DateTime
+  final String createdBy;     // ✅ String (user id)
 
   SaleModel({
     required this.saleId,
@@ -95,7 +94,12 @@ class SaleModel {
           .map((e) => SaleItemModel.fromJson(e))
           .toList(),
       subtotal: (json['subtotal'] as num).toDouble(),
-      createdAt: json['created_at'],
+
+      // ✅ SAFE DATE HANDLING
+      createdAt: json['created_at'] is Timestamp
+          ? (json['created_at'] as Timestamp).toDate()
+          : DateTime.parse(json['created_at']),
+
       createdBy: json['created_by'],
     );
   }
@@ -107,7 +111,10 @@ class SaleModel {
       'business_id': businessId,
       'items': items.map((e) => e.toJson()).toList(),
       'subtotal': subtotal,
-      'created_at': createdAt,
+
+      // ✅ ALWAYS STORE AS TIMESTAMP
+      'created_at': Timestamp.fromDate(createdAt),
+
       'created_by': createdBy,
     };
   }
@@ -119,7 +126,7 @@ class SaleModel {
       businessId: businessId,
       items: items.map((e) => e.toEntity()).toList(),
       subtotal: subtotal,
-      createdAt: DateTime.parse(createdAt),
+      createdAt: createdAt, // ✅ NO PARSE
       createdBy: createdBy,
     );
   }
@@ -131,7 +138,7 @@ class SaleModel {
       businessId: entity.businessId,
       items: entity.items.map((e) => SaleItemModel.fromEntity(e)).toList(),
       subtotal: entity.subtotal,
-      createdAt: entity.createdAt.toIso8601String(),
+      createdAt: entity.createdAt, // ✅ KEEP DateTime
       createdBy: entity.createdBy,
     );
   }

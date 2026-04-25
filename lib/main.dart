@@ -1,7 +1,9 @@
 import 'package:a_web_based_managing_and_report_portal/screen/DATATESTPUSH.DART.dart';
+import 'package:a_web_based_managing_and_report_portal/screen/website/presentation/bloc/businessSection.dart';
 import 'package:a_web_based_managing_and_report_portal/screen/website/presentation/bloc/mustcontrol_bloc.dart';
 import 'package:a_web_based_managing_and_report_portal/screen/website/presentation/bloc/sales_service.dart';
 import 'package:a_web_based_managing_and_report_portal/screen/website/presentation/pages/authentication/login.dart';
+import 'package:a_web_based_managing_and_report_portal/screen/website/presentation/pages/funcationsPage/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -15,8 +17,10 @@ Future<void> main() async {
   runApp(
     MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_)=> BusinessProvider()),
         ChangeNotifierProvider(create: (_) => SalesProvider()),
-        ChangeNotifierProvider(create: (_)=> DashboardProvider())
+        ChangeNotifierProvider(create: (_)=> DashboardProvider()),
+
       ],
       child: MyApp(),
     ),
@@ -32,7 +36,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(fontFamily: "title"),
-      home: LoginPage(),
+      home: HomePage(),
     );
   }
 }

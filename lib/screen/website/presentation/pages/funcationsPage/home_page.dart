@@ -1,10 +1,14 @@
 import 'package:a_web_based_managing_and_report_portal/screen/website/presentation/pages/funcationsPage/chart_screen.dart';
+import 'package:a_web_based_managing_and_report_portal/screen/website/presentation/pages/funcationsPage/configure_screen.dart';
 import 'package:flutter/material.dart';
 import '../../../data/constant/color.dart';
+import '../../bloc/businessSection.dart';
 import '../../bloc/mustcontrol_bloc.dart';
 import '../../bloc/sales_service.dart';
 import '../../widgets/time_bar.dart';
 import 'package:provider/provider.dart';
+
+import 'DashBoard.dart';
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -14,18 +18,25 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   @override
+
   void initState() {
     super.initState();
 
     Future.microtask(() {
-      context.read<SalesProvider>().startListening(context);
+      final business =
+          context.read<BusinessProvider>().selected;
+
+      if (business != null) {
+        context.read<SalesProvider>()
+            .startListening( business.businessId);
+      }
     });
   }
   bool isSidebarOpen = true;
 
   @override
   Widget build(BuildContext context) {
-
+    final businessProvider = context.watch<BusinessProvider>();
     return Scaffold(
       backgroundColor: AppColors.background.withOpacity(0.5),
       body: Row(
@@ -85,42 +96,9 @@ class _HomePageState extends State<HomePage> {
 
           /// MAIN CONTENT
           Expanded(
-            child: Column(
-              children: [
-
-                /// TOP BAR
-                Container(
-                  height: 60,
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                     Text("DashBoard",style: TextStyle(color: AppColors.primaryDark,fontSize: 25),),
-
-
-                      TimeFilterBar(
-                        onChanged: (filter) {
-                          context.read<DashboardProvider>().setFilter(filter);
-                          // 🔥 connect to your dashboard logic
-                          // example:
-                          // provider.setFilter(filter);
-                        },
-                      ),
-
-                      const CircleAvatar(
-                        backgroundColor: AppColors.primary,
-                        child: Icon(Icons.person, color: Colors.white),
-                      ),
-                    ],
-                  ),
-                ),
-
-                /// DASHBOARD CONTENT
-                Expanded(
-                  child: ChartScreen(),
-                ),
-              ],
-            ),
+            child: businessProvider.selected == null
+                ? const BusinessSelectionScreen()
+                : const Dashboard(),
           ),
         ],
       ),

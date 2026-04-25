@@ -1,10 +1,9 @@
-
 import '../../domain/entities/business/bizentity.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 class BusinessModel {
   final String businessId;
   final String name;
-  final String createdAt;
+  final DateTime createdAt;
 
   BusinessModel({
     required this.businessId,
@@ -14,10 +13,22 @@ class BusinessModel {
 
   /// JSON → Model
   factory BusinessModel.fromJson(Map<String, dynamic> json) {
+    final rawDate = json['created_at'];
+
+    DateTime parsedDate;
+
+    if (rawDate is Timestamp) {
+      parsedDate = rawDate.toDate();
+    } else if (rawDate is String) {
+      parsedDate = DateTime.parse(rawDate);
+    } else {
+      parsedDate = DateTime.now(); // fallback
+    }
+
     return BusinessModel(
-      businessId: json['business_id'],
-      name: json['name'],
-      createdAt: json['created_at'],
+      businessId: json['business_id'] ?? '',
+      name: json['name'] ?? '',
+      createdAt: parsedDate,
     );
   }
 
@@ -35,7 +46,7 @@ class BusinessModel {
     return BusinessEntity(
       id: businessId,
       name: name,
-      createdAt: DateTime.parse(createdAt),
+      createdAt:createdAt,
     );
   }
 
@@ -44,7 +55,7 @@ class BusinessModel {
     return BusinessModel(
       businessId: entity.id,
       name: entity.name,
-      createdAt: entity.createdAt.toIso8601String(),
+      createdAt: entity.createdAt,
     );
   }
 }
