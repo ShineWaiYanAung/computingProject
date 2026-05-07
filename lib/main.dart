@@ -36,64 +36,66 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(fontFamily: "title"),
-      home: HomePage(),
+      home:
+      HomePage()
+       // LoginPage()
     );
   }
 }
 
-class SeedScreen extends StatefulWidget {
-  const SeedScreen({super.key});
-
-  @override
-  State<SeedScreen> createState() => _SeedScreenState();
-}
-
-class _SeedScreenState extends State<SeedScreen> {
-  bool isLoading = false;
-
-  Future<void> _runSeed() async {
-    setState(() => isLoading = true);
-
-    try {
-      await SeedData().run();
-
-      if (!mounted) return;
-
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text("✅ Firebase data updated")));
-    } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("❌ Error: $e")));
-    }
-
-    if (mounted) {
-      setState(() => isLoading = false);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("Update Firebase Data")),
-      body: Center(
-        child: isLoading
-            ? const CircularProgressIndicator()
-            : ElevatedButton(
-                onPressed: _runSeed,
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 14,
-                  ),
-                ),
-                child: const Text(
-                  "Update / Re-generate Data",
-                  style: TextStyle(fontSize: 16),
-                ),
-              ),
-      ),
-    );
-  }
-}
+// class SeedScreen extends StatefulWidget {
+//   const SeedScreen({super.key});
+//
+//   @override
+//   State<SeedScreen> createState() => _SeedScreenState();
+// }
+//
+// class _SeedScreenState extends State<SeedScreen> {
+//   bool isLoading = false;
+//
+//   Future<void> _runSeed() async {
+//     setState(() => isLoading = true);
+//
+//     try {
+//       await SeedData().run();
+//
+//       if (!mounted) return;
+//
+//       ScaffoldMessenger.of(
+//         context,
+//       ).showSnackBar(const SnackBar(content: Text("✅ Firebase data updated")));
+//     } catch (e) {
+//       ScaffoldMessenger.of(
+//         context,
+//       ).showSnackBar(SnackBar(content: Text("❌ Error: $e")));
+//     }
+//
+//     if (mounted) {
+//       setState(() => isLoading = false);
+//     }
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(title: const Text("Update Firebase Data")),
+//       body: Center(
+//         child: isLoading
+//             ? const CircularProgressIndicator()
+//             : ElevatedButton(
+//           onPressed: _runSeed,
+//           style: ElevatedButton.styleFrom(
+//             padding: const EdgeInsets.symmetric(
+//               horizontal: 24,
+//               vertical: 14,
+//             ),
+//           ),
+//           child: const Text(
+//             "Update / Re-generate Data",
+//             style: TextStyle(fontSize: 16),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }

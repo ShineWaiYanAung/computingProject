@@ -20,4 +20,8 @@ class BusinessProvider extends ChangeNotifier {
     _selected = business;
     notifyListeners();
   }
+  void clearBusiness() {
+    _selected = null;
+    notifyListeners();
+  }
 }

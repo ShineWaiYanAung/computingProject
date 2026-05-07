@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../data/constant/color.dart';
+import '../../bloc/businessSection.dart';
 import '../../bloc/mustcontrol_bloc.dart';
 import '../../widgets/time_bar.dart';
 import 'chart_screen.dart';
@@ -20,20 +21,23 @@ class Dashboard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text("DashBoard",style: TextStyle(color: AppColors.primaryDark,fontSize: 25),),
-
-
               TimeFilterBar(
                 onChanged: (filter) {
                   context.read<DashboardProvider>().setFilter(filter);
-                  // 🔥 connect to your dashboard logic
-                  // example:
-                  // provider.setFilter(filter);
+
                 },
               ),
 
-              const CircleAvatar(
+               CircleAvatar(
                 backgroundColor: AppColors.primary,
-                child: Icon(Icons.person, color: Colors.white),
+                child: InkWell(
+                    onTap: (){
+                      context
+                          .read<BusinessProvider>()
+                          .clearBusiness();
+
+                    },
+                    child: Icon(Icons.settings_backup_restore_rounded, color: Colors.white)),
               ),
             ],
           ),

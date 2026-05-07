@@ -1,13 +1,17 @@
+import 'package:a_web_based_managing_and_report_portal/screen/DATATESTPUSH.DART.dart';
+import 'package:a_web_based_managing_and_report_portal/screen/website/presentation/pages/authentication/login.dart';
 import 'package:a_web_based_managing_and_report_portal/screen/website/presentation/pages/funcationsPage/chart_screen.dart';
 import 'package:a_web_based_managing_and_report_portal/screen/website/presentation/pages/funcationsPage/configure_screen.dart';
 import 'package:flutter/material.dart';
 import '../../../data/constant/color.dart';
 import '../../bloc/businessSection.dart';
+import '../../bloc/expense_service.dart';
 import '../../bloc/mustcontrol_bloc.dart';
 import '../../bloc/sales_service.dart';
 import '../../widgets/time_bar.dart';
 import 'package:provider/provider.dart';
 
+import '../authentication/useraccount.dart';
 import 'DashBoard.dart';
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -17,18 +21,44 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final service = ExpenseService();
+
+  bool _expenseLoaded = false;
   @override
 
+  @override
   void initState() {
     super.initState();
 
-    Future.microtask(() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+
       final business =
           context.read<BusinessProvider>().selected;
 
+      print("🏢 BUSINESS: ${business?.businessId}");
+
       if (business != null) {
-        context.read<SalesProvider>()
-            .startListening( business.businessId);
+
+        /// SALES
+        context
+            .read<SalesProvider>()
+            .startListening(
+          business.businessId,
+        );
+
+        /// EXPENSES
+        service
+            .getExpenses(
+          business.businessId,
+        )
+            .listen((data) {
+
+          print(" EXPENSES LOADED: ${data.length}");
+
+          context
+              .read<DashboardProvider>()
+              .setExpenses(data);
+        });
       }
     });
   }
@@ -37,6 +67,26 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final businessProvider = context.watch<BusinessProvider>();
+    final business =
+        context.watch<BusinessProvider>().selected;
+
+    if (business != null && !_expenseLoaded) {
+
+      _expenseLoaded = true;
+
+      print(" STARTING EXPENSE LISTENER");
+
+      service
+          .getExpenses(business.businessId)
+          .listen((data) {
+
+        print("✅ EXPENSES: ${data.length}");
+
+        context
+            .read<DashboardProvider>()
+            .setExpenses(data);
+      });
+    }
     return Scaffold(
       backgroundColor: AppColors.background.withOpacity(0.5),
       body: Row(
@@ -73,18 +123,24 @@ class _HomePageState extends State<HomePage> {
                     ),
                   const SizedBox(height: 40),
                   /// MENU ITEMS
-                  _menuItem(Icons.person, "Profile"),
-                  _menuItem(Icons.folder, "Projects"),
-                  _menuItem(Icons.settings, "Settings"),
+                  _menuItem(Icons.person, "Profile",(){ showUserInfoDialog(context);}),
+                  _menuItem(Icons.folder, "DataPushUpMockedUp",(){  Navigator.of(context).push(MaterialPageRoute(builder: (context) => SeedAutoScreen(),));}),
+                  _menuItem(Icons.settings, "Settings",(){
+
+                  }),
 
                   const Spacer(),
 
                   /// LOGOUT
 
                   Padding(
-                    padding: const EdgeInsets.all(12),
-                    child: const Center(
-                      child: Icon(Icons.logout, color: Colors.red),
+                    padding:  EdgeInsets.all(12),
+                    child: Center(
+                      child: IconButton(
+        onPressed: (){
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginPage()));
+        },
+        icon: Icon(Icons.logout, color: Colors.red)),
                     ),
                   ),
 
@@ -106,12 +162,12 @@ class _HomePageState extends State<HomePage> {
   }
 
   /// SIDEBAR MENU ITEM
-  Widget _menuItem(IconData icon, String title) {
+  Widget _menuItem(IconData icon, String title ,VoidCallback func) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
       child: InkWell(
         borderRadius: BorderRadius.circular(8),
-        onTap: () {},
+        onTap: func,
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
           child: isSidebarOpen

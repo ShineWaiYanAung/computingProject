@@ -2,20 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../bloc/mustcontrol_bloc.dart';
 
-class RevenueCard extends StatelessWidget {
-  const RevenueCard({super.key});
+class ProfitCard extends StatelessWidget {
+  const ProfitCard({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Consumer<DashboardProvider>(
       builder: (_, provider, __) {
-        final revenue = provider.revenue;
-        final growth = provider.revenueGrowth;
+        final profit = provider.profit;
+        final growth = provider.profitGrowth;
 
         final isPositive = growth >= 0;
 
         return Container(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(6),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(16),
@@ -28,10 +28,10 @@ class RevenueCard extends StatelessWidget {
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min, // 🔥 important
+            mainAxisSize: MainAxisSize.min,
             children: [
               const Text(
-                "Total Revenue (USD)",
+                "Total Profit (USD)",
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.grey,
@@ -40,25 +40,22 @@ class RevenueCard extends StatelessWidget {
 
               const SizedBox(height: 8),
 
-              /// 🔥 FLEXIBLE TEXT (FIXES OVERFLOW)
-              Flexible(
-                child: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    revenue.toStringAsFixed(0),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                    ),
+              /// 🔥 PROFIT VALUE
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  profit.toStringAsFixed(0),
+                  style: const TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
 
               const SizedBox(height: 6),
 
+              /// 🔥 GROWTH %
               Text(
                 "${isPositive ? '+' : ''}${growth.toStringAsFixed(1)}%",
                 style: TextStyle(
